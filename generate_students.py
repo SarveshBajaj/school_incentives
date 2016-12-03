@@ -30,13 +30,14 @@ def get_all_students():
 				s_probs.append(1.0)
 
 		kgers = round(float(line[16]))
-		hisp = round(float(line[18]))
+		hisp = round(float(line[17]))
 		white = round(float(line[19]))
 		black = round(float(line[20]))
 		amind = round(float(line[21]))
 		asian = round(float(line[22]))
 		nathaw = round(float(line[23]))
 		multi = round(float(line[25]))
+		kgers =  (hisp + white + black + amind + asian + nathaw + multi)
 
 		for i in range(int(kgers)):
 			s = Student()
