@@ -1,14 +1,21 @@
-import student
+from student import Student
 import random as rand
+import pickle as pkl
+import copy
+
 
 f = open("census_tract.csv")
+standard_score = pkl.load(open("scores.p", "rb"))
+types = pkl.load(open("school_type.p", "rb"))
+
 
 def get_all_students():
 	students = []
 	for line in f:
 		line = line.split(",")
-		ct = str(line[0])
-		if ct == 'Census Tract':
+		#ct = str(line[0])
+		ct = line[2]
+		if ct == 'CTIP':
 			continue
 		schools = str(line[1])
 		schools = schools.split('/')
@@ -41,7 +48,7 @@ def get_all_students():
 				sch = school_names[0]
 			else:
 				sch = school_names[1]
-			s.att_area = sch
+			s.att_area = sch.strip()
 			if hisp > 0:
 				s.race = 'hisp'
 				hisp -=1
@@ -65,12 +72,58 @@ def get_all_students():
 				multi -=1
 			else:
 				s.race = 'asian'
-		students.add(s)
+
+			score  = copy.deepcopy(standard_score) # add variance
+			score[s.att_area] += max(rand.normalvariate(1000, 100), 0.1)
+			immersion_pref = max(min(rand.normalvariate(1, 0.5), 1), 0.1)
+			for school in types:
+				if types[school] != "GEN":
+					score[school] *= immersion_pref
+			total_score = 0
+			for school in score:
+				total_score += score[school]
+			rankings = []
+			while len(score) > 0:
+				#print score
+				p = rand.random()
+				cumulative_prob = 0
+				for school in score:
+					#print score[school] 
+					#print total_score
+					cumulative_prob += (score[school] / total_score)
+					if cumulative_prob > p:
+						rankings.append(school)
+						total_score -= score[school]
+						del score[school]
+						break
+			s.rankings = rankings
+			if s.ct == 1:
+				s.private_schoool_cutoff = len(s.rankings) + 1
+			else:
+				s.private_schoool_cutoff = rand.randint(0, len(s.rankings))
+			students.append(s)
 	return students
 
 
+students =  get_all_students()
+# ranking_map = {}
+# for student in students:
+# 	for i in xrange(len(student.rankings)):
+# 		school = student.rankings[i]
+# 		if school not in ranking_map:
+# 			ranking_map[school] = [0 for i in xrange(8)]
+# 		ranking_map[school][min(i, 7)] += 1
+# for school in ranking_map:
+# 	print school
+# 	print ranking_map[school]
+# 	print
+
+# print ranking_map['Clarendon']
+# print ranking_map['Carver']
 
 
+
+pkl.dump(students, open("students.p", "wb"))
 
 
 
