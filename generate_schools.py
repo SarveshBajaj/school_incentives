@@ -7,7 +7,7 @@ import copy
 f = open("school_caps.csv")
 
 def get_all_schools():
-	schools = []
+	schools = {}
 	for line in f:
 		line = line.split(",")
 		if str(line[1]).strip() != 'GEN':
@@ -17,7 +17,7 @@ def get_all_schools():
 		cap = int(line[2])
 		print name, cap
 		s = School(name,cap)
-		schools.append(s)
+		schools[s] = s
 	return schools
 
 

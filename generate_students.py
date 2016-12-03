@@ -38,7 +38,6 @@ def get_all_students():
 		nathaw = round(float(line[23]))
 		multi = round(float(line[25]))
 		kgers =  (hisp + white + black + amind + asian + nathaw + multi)
-
 		for i in range(int(kgers)):
 			s = Student()
 			s.ct = ct
