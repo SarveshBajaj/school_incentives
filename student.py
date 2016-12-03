@@ -8,7 +8,10 @@ class Student:
 		self.rankings = None
 		self.private_schoool_cutoff = None
 
-
+class School:
+	def __init__(self,name,cap):
+		self.name = name
+		self.capacity = cap
 
 
 # add points for immersion -- normal(30, 70)
