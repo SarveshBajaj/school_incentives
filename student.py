@@ -7,6 +7,7 @@ class Student:
 		self.att_area = None
 		self.rankings = None
 		self.private_schoool_cutoff = None
+		self.race = None
 
 class School:
 	def __init__(self,name,cap):
