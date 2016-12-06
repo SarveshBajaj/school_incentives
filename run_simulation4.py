@@ -97,6 +97,7 @@ def make_offers():
 			for offer in offers:
 				tent_offers_student[offer].add(school.name)
 	print "new capacity = " + str(new_cap)
+	return new_cap
 
 def accept_offers():
 	offers_removed = 0
@@ -118,6 +119,7 @@ def accept_offers():
 					offers_removed += len(offers) -1
 					for sch in offers:
 						tent_offers[sch].remove(student)
+					tent_offers_student[student] = [sch for sch in tent_offers_student[student] if sch == school]
 					if len(assignments[school]) == capacities[school]:
 						 full_schools.add(school)
 	return offers_removed
@@ -187,6 +189,38 @@ def make_pref_graph():
 				graph[(school, student)] = nodes[student]
 	return graph
 
+def force_assignments():
+	for student in students:
+			tent_offers_student[student] = set()
+	for school in schools:
+		tent_offers[school.name] = []
+	for school in schools:
+		print "-----------"
+		print school.name
+		print school.capacity
+		print len(assignments[school.name])
+		print len(tent_offers[school.name])
+		print school.name in full_schools
+		print school in full_schools
+		print "-----------"
+	# offers_removed = 0
+	# for student in students:
+	# 	if student not in assigned_students and len(tent_offers_student[student]) > 0:
+	# 		print "force_assignments for " + student
+	# 		for i in xrange(len(student.rankings)):
+	# 			school = student.rankings[i]
+	# 			if student in tent_offers[school]:
+	# 				break
+	# 		assignments[school].append(student)
+	# 		assigned_students.add(student)
+	# 		offers = tent_offers_student[student]
+	# 		offers_removed += len(offers) -1
+	# 		for sch in offers:
+	# 			tent_offers[sch].remove(student)
+	# 		if len(assignments[school]) == capacities[school]:
+	# 			 full_schools.add(school)
+
+
 def remove_cycles():
 	graph = make_pref_graph()
 
@@ -228,6 +262,10 @@ def remove_cycles1():
 
 
 loop_round = 1
+found_cycles = True
+new_cap = 1
+
+# restart sim
 while num_assigned < num_students:
 	# schools make offers to students
 	print "-------------"
@@ -236,7 +274,7 @@ while num_assigned < num_students:
 	while prev_assigned < num_assigned:
 		print "offering"
 		prev_assigned  = num_assigned
-		make_offers()
+		new_cap = make_offers()
 		accept_offers()
 		num_assigned = len(assigned_students)
 	print "num_assigned = " + str(num_assigned)
@@ -255,6 +293,10 @@ while num_assigned < num_students:
 		#else:
 		#	iters -= 1
 		print "num_assigned = " + str(num_assigned)
+	new_cap = make_offers()
+	if new_cap == 0 and not cycles:
+		print "forcing_assignments"
+		force_assignments()
 	loop_round += 1
 	# for school in assignments:
 	# 	print
