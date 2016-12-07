@@ -6,20 +6,20 @@ Implementations of the SFUSD matching system process on data we generated oursel
 
 ### Directory Structure
 
-##### data/ contains SFUSD data on census tracts, demographics, school capacities, etc.
+data/ contains SFUSD data on census tracts, demographics, school capacities, etc.
 
-##### data_generation/ includes scripts to aggregate SFUSD data to create our students so they reflect the data distributions we researched
+data_generation/ includes scripts to aggregate SFUSD data to create our students so they reflect the data distributions we researched
 
-##### extra_work/ includes the many different simulations and things we tried throughout this project before we settled on our most optimized and correct simulations
+extra_work/ includes the many different simulations and things we tried throughout this project before we settled on our most optimized and correct simulations
 
-##### metrics/ contains scripts to run aggregate statistics and generate visualizations of our results
+metrics/ contains scripts to run aggregate statistics and generate visualizations of our results
 
-##### open_source/ contains files we tried from a similar open source project(see: https://github.com/ogaway/Matching-Market/blob/master/matchfuncs.py)
+open_source/ contains files we tried from a similar open source project(see: https://github.com/ogaway/Matching-Market/blob/master/matchfuncs.py)
 
-##### pickled_data/ contains stored data structures we generated of student and school objects
+pickled_data/ contains stored data structures we generated of student and school objects
 
-##### results/ includes the results of our various simulations on different sample sizes
+results/ includes the results of our various simulations on different sample sizes
 
-##### simulations/ contains models for the current SFUSD system, and a lottery draw based system
+simulations/ contains models for the current SFUSD system, and a lottery draw based system
 
-##### student.py is the Student objct class
+student.py is the Student objct class
