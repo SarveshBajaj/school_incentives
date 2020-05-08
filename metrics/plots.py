@@ -2,36 +2,95 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle as pkl
 import pandas as pd
+import os
 
-assignments = pkl.load(open("draw_assignments.p","rb"))
-to_plot = {}
+file1 = open("draw_plot.dat","a")
+file1.seek(0)
+file1.truncate()
+file1.close()
 
-num_students_first = 0
-num_att_area = 0
-studs =0
+assignments = pkl.load(open("../results/draw_assignments.p","r"))
+current = pkl.load(open("../results/assignments10percent.p","r"))
+flipped = pkl.load(open("../results/assignments10-flipped.p","r"))
+
+to_plot_draw = {}
+to_plot_current = {}
+to_plot_flipped = {}
+
+num_students_first_draw = 0
+num_students_first_current = 0
+num_students_first_flipped = 0
+num_att_area_draw = 0
+num_att_area_current = 0
+num_att_area_flipped = 0
+studs_draw = 0
+studs_current = 0
+studs_flipped = 0
+
 for school in assignments:
-	tot_students = len(assignments[school])
-	races = {}
+	tot_students_draw = len(assignments[school])
+	races_draw = {}
 	for student in assignments[school]:
-		studs +=1
+		studs_draw +=1
 		if student.att_area == school:
-			num_att_area +=1
+			num_att_area_draw +=1
 		if student.rankings[0] == school:
-			num_students_first +=1
+			num_students_first_draw +=1
 		student_race = student.race
-		if student_race not in races:
-			races[student_race] = 0
-		races[student_race] +=1
-	for r in races:
-		if races[r]/float(tot_students) >= 0.6 and races[r]/float(tot_students) < 1.0:
-			to_plot[school] = races
-			print school, r
+		if student_race not in races_draw:
+			races_draw[student_race] = 0
+		races_draw[student_race] +=1
+	for r in races_draw:
+		if races_draw[r]/float(tot_students_draw) >= 0.6 and races_draw[r]/float(tot_students_draw) < 1.0:
+			to_plot_draw[school] = races_draw
 			break
 
-print "number of schools with 60-percent of one race",len(to_plot)
-print "number of students who got their first choice:",num_students_first/float(studs)
-print "number of students who got their att_area school:",num_att_area/float(studs)
+for school in current:
+	tot_students_current = len(current[school])
+	races_current = {}
+	for student in current[school]:
+		studs_current +=1
+		if student.att_area == school:
+			num_att_area_current +=1
+		if student.rankings[0] == school:
+			num_students_first_current +=1
+		student_race = student.race
+		if student_race not in races_current:
+			races_current[student_race] = 0
+		races_current[student_race] +=1
+	for r in races_current:
+		if races_current[r]/float(tot_students_current) >= 0.6 and races_current[r]/float(tot_students_current) < 1.0:
+			to_plot_current[school] = races_current
+			break
 
+for school in flipped:
+	tot_students_flipped = len(flipped[school])
+	races_flipped = {}
+	for student in flipped[school]:
+		studs_flipped +=1
+		if student.att_area == school:
+			num_att_area_flipped +=1
+		if student.rankings[0] == school:
+			num_students_first_flipped +=1
+		student_race = student.race
+		if student_race not in races_flipped:
+			races_flipped[student_race] = 0
+		races_flipped[student_race] +=1
+	for r in races_flipped:
+		if races_flipped[r]/float(tot_students_flipped) >= 0.6 and races_flipped[r]/float(tot_students_flipped) < 1.0:
+			to_plot_flipped[school] = races_flipped
+			break
+
+print "number of schools with 60-percent of one race",len(to_plot_draw)
+print "number of students who got their first choice:",num_students_first_draw/float(studs_draw)
+print "number of students who got their att_area school:",num_att_area_draw/float(studs_draw)
+
+file1 = open("draw_plot.dat","a")
+file1.write("{} {} {} {}\n".format("Current",len(to_plot_current)/float(100),num_students_first_current/float(studs_current) ,num_att_area_current/float(studs_current)))
+file1.write("{} {} {} {}\n".format("Flipped",len(to_plot_flipped)/float(100),num_students_first_flipped/float(studs_flipped) ,num_att_area_flipped/float(studs_flipped)))
+file1.write("{} {} {} {}\n".format("Draw",len(to_plot_draw),num_students_first_draw/float(studs_draw) ,num_att_area_draw/float(studs_draw)))
+file1.close()
+os.system('cmd /k "gnuplot -persist draw_bar.gp"')
 # #plotting
 # schools = [x for x in to_plot][7:14]
 # white_students = [to_plot[x]['white']/float(sum(to_plot[x].values())) if 'white' in to_plot[x] else 0 for x in to_plot][7:14]
@@ -47,7 +106,7 @@ print "number of students who got their att_area school:",num_att_area/float(stu
 # ind = np.arange(N)
 # wh = plt.bar(ind, white_students, width)
 # bl = plt.bar(ind, black_students, width,bottom = white_students)
-# asn = plt.bar(ind, asian_students, width, bottom = white_students+ black_students])
+# asn = plt.bar(ind, asian_students, width, bottom = white_students+ black_students)
 # hisp = plt.bar(ind, hisp_students, width, bottom = white_students + black_students + asian_students)
 # nh = plt.bar(ind, nathaw_students, width, bottom = white_students + black_students + asian_students + hisp_students)
 # mul = plt.bar(ind, multi_students, width, bottom = white_students + black_students + asian_students + hisp_students + nathaw_students)

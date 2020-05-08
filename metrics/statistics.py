@@ -1,11 +1,11 @@
 import pickle as pkl
 from student import Student,School
 from collections import Counter
-students = pkl.load(open("students.p", "rb"))
-schools = pkl.load(open("schools.p", "rb"))
+students = pkl.load(open("../pickled_data/students.p", "r"))
+schools = pkl.load(open("../pickled_data/schools.p", "r"))
 
-assignments = pkl.load(open("assignments10percent.p", "rb"))
-assignments_flipped = pkl.load(open("assignments10-flipped.p", "rb"))
+assignments = pkl.load(open("../results/assignments10percent.p", "r"))
+assignments_flipped = pkl.load(open("../results/assignments10-flipped.p", "r"))
 
 isolated_schools = {}
 
